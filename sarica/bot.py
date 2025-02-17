@@ -18,6 +18,7 @@ class SaricaBot(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
         self.announcements_channel_id = int(os.getenv("ANNOUNCEMENTS_CHANNEL_ID"))
+        self.bot_spam_channel_id = int(os.getenv("BOT_SPAM_CHANNEL_ID"))
 
         self.new_members_channel_id = int(os.getenv("NEW_MEMBERS_CHANNEL_ID"))
         self.wave_sticker_id = int(os.getenv("WAVE_STICKER_ID"))
@@ -30,6 +31,9 @@ class SaricaBot(discord.Client):
 
     async def on_ready(self):
         print(f"Logged in as {self.user}")
+
+        version = os.getenv("SARICA_VERSION_HASH")
+        await self.bot_spam(f"I'm back online!\n(Version: {version})")
 
     async def on_member_join(self, member: discord.Member):
         print(f"{member.name} has joined the server")
@@ -143,6 +147,19 @@ class SaricaBot(discord.Client):
             seconds = (now.minute % 10) * 60 + now.second
             to_wait = 600 - seconds
             await asyncio.sleep(to_wait)
+
+    async def bot_spam(self, message):
+        guild = self.get_guild(self.guild.id)
+        if guild is None:
+            print("Warning: Guild not found")
+            return
+
+        channel = guild.get_channel(self.bot_spam_channel_id)
+        if channel is None:
+            print("Warning: Bot spam channel not found")
+            return
+
+        await channel.send(message)
 
 
 def run():

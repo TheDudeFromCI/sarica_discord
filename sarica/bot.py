@@ -1,5 +1,7 @@
 import os
 import discord
+import asyncio
+from datetime import datetime
 from discord import app_commands
 from .sql import Database
 from .feed import query_rr
@@ -28,7 +30,6 @@ class SaricaBot(discord.Client):
 
     async def on_ready(self):
         print(f"Logged in as {self.user}")
-        await self.check_for_rr_update()
 
     async def on_member_join(self, member: discord.Member):
         print(f"{member.name} has joined the server")
@@ -53,6 +54,8 @@ class SaricaBot(discord.Client):
     async def setup_hook(self):
         self.tree.copy_global_to(guild=self.guild)
         await self.tree.sync(guild=self.guild)
+
+        self.update_checker = self.loop.create_task(self.check_for_rr_updates_slow())
 
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         if payload.message_id != self.role_message_id:
@@ -128,6 +131,18 @@ class SaricaBot(discord.Client):
             [Royal Road]({chapter.link})
             [Scribble Hub](https://www.scribblehub.com/series/1421176/the-spoken-queens-swarm/)"""
         )
+
+    async def check_for_rr_updates_slow(self):
+        await self.wait_until_ready()
+
+        print("Checking for RR updates every 10 minutes")
+        while not self.is_closed():
+            await self.check_for_rr_update()
+
+            now = datetime.now()
+            seconds = (now.minute % 10) * 60 + now.second
+            to_wait = 600 - seconds
+            await asyncio.sleep(to_wait)
 
 
 def run():

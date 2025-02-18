@@ -41,6 +41,7 @@ class SaricaBot(discord.Client):
         self.fan_art_channel_id = int(os.getenv("FAN_ART_CHANNEL_ID"))
         self.fan_games_channel_id = int(os.getenv("FAN_GAMES_CHANNEL_ID"))
         self.fan_books_channel_id = int(os.getenv("FAN_BOOKS_CHANNEL_ID"))
+        self.book_discussion_channel_id = int(os.getenv("BOOK_DISCUSSION_CHANNEL_ID"))
 
         self.wave_sticker_id = int(os.getenv("WAVE_STICKER_ID"))
 
@@ -409,6 +410,11 @@ class SaricaBot(discord.Client):
                 f"{message.author.name} posted a fan work about TSQS. Adding {points} exp."
             )
             essence.add_points(UserClass.Bug_Girl_Connoisseur, points)
+
+        if message.channel.id == self.book_discussion_channel_id:
+            points = 10
+            print(f"{message.author.name} discussed a book. Adding {points} exp.")
+            essence.add_points(UserClass.Reader, points)
 
         self.db.set_essence(message.author.id, essence)
 

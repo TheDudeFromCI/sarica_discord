@@ -272,11 +272,12 @@ Chapter {chapter.index} is up: *{chapter.name}*
             return
 
         await interaction.response.send_message("You got it, boss.", ephemeral=True)
-        await self.bot_spam("Restarting. I'll be back in a moment.")
 
         if no_start:
+            await self.bot_spam("Oh, gotta go for a second. Be back soon!")
             sys.exit(1)
         else:
+            await self.bot_spam("Restarting. I'll be back in a moment.")
             sys.exit(0)
 
     async def on_message(self, message: discord.Message):

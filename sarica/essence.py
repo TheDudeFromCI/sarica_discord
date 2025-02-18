@@ -199,7 +199,7 @@ class Essence:
         self.exp += value
 
         while True:
-            exp_to_next = math.floor(math.pow(50 * (self.level + 1), 1.5) * 3) - 500
+            exp_to_next = math.floor(math.pow(10 * (self.level + 1), 1.5) * 3)
             if self.exp < exp_to_next:
                 break
 

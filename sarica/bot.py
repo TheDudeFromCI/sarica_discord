@@ -1,4 +1,5 @@
 import os
+import sys
 import discord
 import asyncio
 from datetime import datetime, timedelta
@@ -80,7 +81,7 @@ class SaricaBot(discord.Client):
     async def setup_hook(self):
         @self.tree.command()
         @app_commands.describe(
-            public="If true, this command will be visible to everyone",
+            public="If true, this command will be visible to everyone.",
             member="The member to view the Essence of. If not provided, defaults to the user who invoked the command.",
         )
         async def essence(
@@ -89,6 +90,13 @@ class SaricaBot(discord.Client):
             member: Optional[discord.Member] = None,
         ):
             await self.essence_cmd(interaction, public, member)
+
+        @self.tree.command()
+        @app_commands.describe(
+            no_start="If true, the bot will not restart after reloading.",
+        )
+        async def reload(interaction: discord.Interaction, no_start: bool = False):
+            await self.reload_cmd(interaction, no_start)
 
         self.tree.copy_global_to(guild=self.guild)
         await self.tree.sync(guild=self.guild)
@@ -171,9 +179,11 @@ class SaricaBot(discord.Client):
             return
 
         await channel.send(
-            f"""{updates_role.mention} Chapter {chapter.index} is up: *{chapter.name}*
-            [Royal Road]({chapter.link})
-            [Scribble Hub](https://www.scribblehub.com/series/1421176/the-spoken-queens-swarm/)"""
+            f"""{updates_role.mention}
+**Woo!** New chapter! *Ah, yeah!* 🎉🎉🎉
+Chapter {chapter.index} is up: *{chapter.name}*
+[Royal Road]({chapter.link})
+[Scribble Hub](https://www.scribblehub.com/series/1421176/the-spoken-queens-swarm/)"""
         )
 
     async def check_for_rr_updates_slow(self):
@@ -253,6 +263,21 @@ class SaricaBot(discord.Client):
             """,
             ephemeral=not public,
         )
+
+    async def reload_cmd(self, interaction: discord.Interaction, no_start: bool):
+        if not interaction.permissions.administrator:
+            await interaction.response.send_message(
+                "Sorry, {interaction.user.name}, I can't do that. You do not have permission to use this command.", ephemeral=True
+            )
+            return
+
+        await interaction.response.send_message("You got it, boss.", ephemeral=True)
+        await self.bot_spam("Restarting. I'll be back in a moment.")
+
+        if no_start:
+            sys.exit(1)
+        else:
+            sys.exit(0)
 
     async def on_message(self, message: discord.Message):
         if message.author.id == self.user.id:

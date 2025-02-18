@@ -360,12 +360,16 @@ class SaricaBot(discord.Client):
             essence.add_points(UserClass.Web_Archiver, points)
 
         if message.channel.id == self.show_off_channel_id:
-            points = len(message.embeds) * 1000
-            if message.content is not None and len(message.content) > 0:
-                points += 1
+            if (
+                message.thread is not None
+                and message.thread.owner_id == message.author.id
+            ):
+                points = len(message.embeds) * 1000
+                if message.content is not None and len(message.content) > 0:
+                    points += 1
 
-            print(f"{message.author.name} showed off. Adding {points} exp.")
-            essence.add_points(UserClass.Content_Creator, points)
+                print(f"{message.author.name} showed off. Adding {points} exp.")
+                essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.intro_channel_id:
             points = 100
@@ -373,43 +377,49 @@ class SaricaBot(discord.Client):
             essence.add_points(UserClass.Social_Butterfly, points)
 
         if message.channel.id == self.fan_art_channel_id:
-            points = len(message.embeds) * 1000
-            if message.content is not None and len(message.content) > 0:
-                points += 1
+            if (
+                message.thread is not None
+                and message.thread.owner_id == message.author.id
+            ):
+                points = len(message.embeds) * 1000
+                if message.content is not None and len(message.content) > 0:
+                    points += 1
 
-            print(f"{message.author.name} posted fan art. Adding {points} exp.")
-            essence.add_points(UserClass.Artist, points)
+                print(f"{message.author.name} posted fan art. Adding {points} exp.")
+                essence.add_points(UserClass.Artist, points)
 
-            print(
-                f"{message.author.name} posted a fan work about TSQS. Adding {points} exp."
-            )
-            essence.add_points(UserClass.Bug_Girl_Connoisseur, points)
+                print(f"{message.author.name} showed off. Adding {points} exp.")
+                essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.fan_games_channel_id:
-            points = len(message.embeds) * 1000
-            if message.content is not None and len(message.content) > 0:
-                points += 1
+            if (
+                message.thread is not None
+                and message.thread.owner_id == message.author.id
+            ):
+                points = len(message.embeds) * 1000
+                if message.content is not None and len(message.content) > 0:
+                    points += 1
 
-            print(f"{message.author.name} posted a fan game. Adding {points} exp.")
-            essence.add_points(UserClass.GameDev, points)
+                print(f"{message.author.name} posted a fan game. Adding {points} exp.")
+                essence.add_points(UserClass.GameDev, points)
 
-            print(
-                f"{message.author.name} posted a fan work about TSQS. Adding {points} exp."
-            )
-            essence.add_points(UserClass.Bug_Girl_Connoisseur, points)
+                print(f"{message.author.name} showed off. Adding {points} exp.")
+                essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.fan_books_channel_id:
-            points = len(message.embeds) * 1000
-            if message.content is not None and len(message.content) > 0:
-                points += 1
+            if (
+                message.thread is not None
+                and message.thread.owner_id == message.author.id
+            ):
+                points = len(message.embeds) * 1000
+                if message.content is not None and len(message.content) > 0:
+                    points += 1
 
-            print(f"{message.author.name} posted a fan book. Adding {points} exp.")
-            essence.add_points(UserClass.Storyteller, points)
+                print(f"{message.author.name} posted a fan book. Adding {points} exp.")
+                essence.add_points(UserClass.Storyteller, points)
 
-            print(
-                f"{message.author.name} posted a fan work about TSQS. Adding {points} exp."
-            )
-            essence.add_points(UserClass.Bug_Girl_Connoisseur, points)
+                print(f"{message.author.name} showed off. Adding {points} exp.")
+                essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.book_discussion_channel_id:
             points = 10

@@ -372,7 +372,15 @@ class SaricaBot(discord.Client):
                 essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.intro_channel_id:
-            points = 100
+            points = 50
+
+            join_cutoff = datetime.now() - timedelta(days=3)
+            if (
+                message.author.joined_at is not None
+                and message.author.joined_at >= join_cutoff
+            ):
+                points = 500
+
             print(f"{message.author.name} introduced themselves. Adding {points} exp.")
             essence.add_points(UserClass.Social_Butterfly, points)
 

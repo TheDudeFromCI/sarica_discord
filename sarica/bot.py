@@ -93,6 +93,20 @@ class SaricaBot(discord.Client):
 
         @self.tree.command()
         @app_commands.describe(
+            member="The member to add Essence to.",
+            points="The amount of Essence to add.",
+            user_class="The class to add Essence to.",
+        )
+        async def add_essence(
+            interaction: discord.Interaction,
+            member: discord.Member,
+            points: int,
+            user_class: UserClass,
+        ):
+            await self.add_essence_cmd(interaction, member, points, user_class)
+
+        @self.tree.command()
+        @app_commands.describe(
             no_start="If true, the bot will not restart after reloading.",
         )
         async def reload(interaction: discord.Interaction, no_start: bool = False):
@@ -210,6 +224,30 @@ Chapter {chapter.index} is up: *{chapter.name}*
             return
 
         await channel.send(message)
+
+    async def add_essence_cmd(
+        self,
+        interaction: discord.Interaction,
+        member: discord.Member,
+        points: int,
+        user_class: UserClass,
+    ):
+        if not interaction.permissions.administrator:
+            await interaction.response.send_message(
+                "Sorry, {interaction.user.name}, I can't do that. You do not have permission to use this command.",
+                ephemeral=True,
+            )
+            return
+
+        essence = self.db.get_essence(member.id)
+        print(f"{member.name} gained {points} {user_class.get_name()} exp.")
+        essence.add_points(user_class, points)
+        self.db.set_essence(member.id, essence)
+
+        await interaction.response.send_message(
+            f"{member.name} gained {points} exp in {user_class.get_name()}.",
+            ephemeral=True,
+        )
 
     async def essence_cmd(
         self,

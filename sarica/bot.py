@@ -193,7 +193,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
         while not self.is_closed():
             await self.check_for_rr_update()
 
-            now = datetime.now()
+            now = datetime.now() - timedelta(minutes=1)
             seconds = (now.minute % 10) * 60 + now.second
             to_wait = 600 - seconds
             await asyncio.sleep(to_wait)

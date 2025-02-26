@@ -30,15 +30,6 @@ class Database:
         )
         self.cursor.execute(
             """
-            CREATE TABLE IF NOT EXISTS essence (
-                member_id INTEGER PRIMARY KEY,
-                exp INTEGER,
-                level INTEGER
-            )
-            """
-        )
-        self.cursor.execute(
-            """
             CREATE TABLE IF NOT EXISTS classes (
                 member_id INTEGER,
                 class_id INTEGER,
@@ -80,9 +71,6 @@ class Database:
     def get_essence(self, member_id):
         essence = Essence()
 
-        self.cursor.execute(
-            "SELECT exp, level FROM essence WHERE member_id = ?", (member_id,)
-        )
         query = self.cursor.fetchone()
         if query is not None:
             essence.exp = query[0]
@@ -93,19 +81,11 @@ class Database:
         )
         query = self.cursor.fetchall()
         for class_id, points in query:
-            user_class = UserClass(class_id)
-            progress = ClassProgress(user_class)
-            essence.classes.append(progress)
-            essence.add_points(user_class, points)
+            essence.add_points(UserClass(class_id), points)
 
         return essence
 
     def set_essence(self, member_id, essence: Essence):
-        self.cursor.execute(
-            "INSERT OR REPLACE INTO essence (member_id, exp, level) VALUES (?, ?, ?)",
-            (member_id, essence.exp, essence.level),
-        )
-
         for progress in essence.classes:
             if not progress.changed:
                 continue

@@ -199,8 +199,7 @@ class Essence:
         return math.floor(math.pow(10 * (self.level + 1), 1.5) * 3)
 
     def get_exp_percent(self) -> float:
-        exp_to_next = self.exp_to_next()
-        return self.exp / exp_to_next
+        return self.exp / self.exp_to_next()
 
     def get_exp_percent_str(self) -> str:
         return f"{math.floor(self.get_exp_percent() * 100)}%"
@@ -219,11 +218,11 @@ class Essence:
             return
 
         while True:
-            exp_to_next = self.exp_to_next()
-            if self.exp < exp_to_next:
+            needed = self.exp_to_next()
+            if self.exp < needed:
                 break
 
-            self.exp -= exp_to_next
+            self.exp -= needed
             self.level += 1
 
         self.level = min(self.level, 244)

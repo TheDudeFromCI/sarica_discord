@@ -274,8 +274,8 @@ def affinity_to_grade(value: float) -> str:
         return "X"
 
     l = math.log(value, 3)
-    letter = floor(l)
-    sign = floor((l - letter) * 3)
+    letter = math.floor(l)
+    sign = math.floor((l - letter) * 3)
 
     if letter >= 9:
         return "Z"

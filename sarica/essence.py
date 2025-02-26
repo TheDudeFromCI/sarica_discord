@@ -203,7 +203,7 @@ class Essence:
         return self.exp / exp_to_next
 
     def get_exp_percent_str(self) -> str:
-        return f"{self.get_exp_percent() * 100:.2f}%"
+        return f"{math.floor(self.get_exp_percent() * 100)}%"
 
     def __add_exp(self, value: int) -> None:
         self.exp += value

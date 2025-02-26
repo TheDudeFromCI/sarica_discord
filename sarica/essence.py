@@ -198,6 +198,13 @@ class Essence:
     def exp_to_next(self) -> int:
         return math.floor(math.pow(10 * (self.level + 1), 1.5) * 3)
 
+    def get_exp_percent(self) -> float:
+        exp_to_next = self.exp_to_next()
+        return self.exp / exp_to_next
+
+    def get_exp_percent_str(self) -> str:
+        return f"{self.get_exp_percent() * 100:.2f}%"
+
     def __add_exp(self, value: int) -> None:
         self.exp += value
 

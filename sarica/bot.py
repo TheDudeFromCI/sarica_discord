@@ -221,7 +221,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             member = interaction.user
 
         essence = self.db.get_essence(member.id)
-        level = str(essence.get_level())
+        level = f"{str(essence.get_level())} ({essence.get_exp_percent_str()})"
         realm = essence.get_realm()
         stage = essence.get_stage()
         path = essence.get_path().name

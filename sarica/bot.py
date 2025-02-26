@@ -267,7 +267,8 @@ Chapter {chapter.index} is up: *{chapter.name}*
     async def reload_cmd(self, interaction: discord.Interaction, no_start: bool):
         if not interaction.permissions.administrator:
             await interaction.response.send_message(
-                "Sorry, {interaction.user.name}, I can't do that. You do not have permission to use this command.", ephemeral=True
+                "Sorry, {interaction.user.name}, I can't do that. You do not have permission to use this command.",
+                ephemeral=True,
             )
             return
 
@@ -296,7 +297,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             essence.add_points(UserClass.Sticker_Collector, points)
 
         if message.channel.id == self.memes_channel_id:
-            points = len(message.embeds) * 100
+            points = len(message.attachments) * 100
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
@@ -323,7 +324,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 essence.add_points(UserClass.Friendly_Guide, points)
 
         if message.channel.id == self.cute_pics_channel_id:
-            points = len(message.embeds) * 100
+            points = len(message.attachments) * 100
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
@@ -331,7 +332,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             essence.add_points(UserClass.Soul_Healer, points)
 
         if message.channel.id == self.nsfw_channel_id:
-            points = len(message.embeds) * 100
+            points = len(message.attachments) * 100
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
@@ -378,7 +379,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             essence.add_points(UserClass.Tech_Support, points)
 
         if message.channel.id == self.cool_stuff_channel_id:
-            points = len(message.embeds) * 100
+            points = len(message.attachments) * 100
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
@@ -390,7 +391,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 message.thread is not None
                 and message.thread.owner_id == message.author.id
             ):
-                points = len(message.embeds) * 1000
+                points = len(message.attachments) * 1000
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
@@ -415,7 +416,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 message.thread is not None
                 and message.thread.owner_id == message.author.id
             ):
-                points = len(message.embeds) * 1000
+                points = len(message.attachments) * 1000
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
@@ -430,7 +431,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 message.thread is not None
                 and message.thread.owner_id == message.author.id
             ):
-                points = len(message.embeds) * 1000
+                points = len(message.attachments) * 1000
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
@@ -445,7 +446,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 message.thread is not None
                 and message.thread.owner_id == message.author.id
             ):
-                points = len(message.embeds) * 1000
+                points = len(message.attachments) * 1000
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 

@@ -195,11 +195,24 @@ class Essence:
     def get_exp(self) -> int:
         return self.exp
 
+    def exp_to_next(self) -> int:
+        return math.floor(math.pow(10 * (self.level + 1), 1.5) * 3)
+
     def __add_exp(self, value: int) -> None:
         self.exp += value
 
+        if self.exp < 0:
+            while True:
+                if self.level == 0:
+                    self.exp = 0
+                    return
+
+                self.level -= 1
+                self.exp += self.exp_to_next()
+            return
+
         while True:
-            exp_to_next = math.floor(math.pow(10 * (self.level + 1), 1.5) * 3)
+            exp_to_next = self.exp_to_next()
             if self.exp < exp_to_next:
                 break
 
@@ -250,15 +263,13 @@ class Essence:
 
 
 def affinity_to_grade(value: float) -> str:
-    if value <= 0:
+    if value < 1:
         return "X"
 
     l = math.log(value, 3)
-    letter = round(l)
-    sign = round((l - letter) * 6) + 1
+    letter = floor(l)
+    sign = floor((l - letter) * 3)
 
-    if letter < 0:
-        return "X"
     if letter >= 9:
         return "Z"
 

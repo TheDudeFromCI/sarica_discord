@@ -36,11 +36,11 @@ def query_rr(db: Database):
     # If the latest chapter is not in the database, add it, but don't return anything
     if latest_chapter_id is None:
         db.set("latest_chapter_id", chapter.chapter_id)
-        print(f"Added last chapter to Database: {chapter.name}")
+        print(f"Added last chapter to Database: {chapter.name}", flush=True)
         return
 
     # If the latest chapter is different from the one in the database, update the database and return the new chapter
     elif latest_chapter_id != chapter.chapter_id:
         db.set("latest_chapter_id", chapter.chapter_id)
-        print(f"New chapter: {chapter.name}")
+        print(f"New chapter: {chapter.name}", flush=True)
         return chapter

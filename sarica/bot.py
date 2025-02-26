@@ -53,13 +53,13 @@ class SaricaBot(discord.Client):
         self.db = Database()
 
     async def on_ready(self):
-        print(f"Logged in as {self.user}")
+        print(f"Logged in as {self.user}", flush=True)
 
         version = os.getenv("SARICA_VERSION_HASH")
         await self.bot_spam(f"I'm back online!\n(Version: {version})")
 
     async def on_member_join(self, member: discord.Member):
-        print(f"{member.name} has joined the server")
+        print(f"{member.name} has joined the server", flush=True)
 
         guild = member.guild
         if guild is None:
@@ -67,7 +67,7 @@ class SaricaBot(discord.Client):
 
         channel = guild.get_channel(self.new_members_channel_id)
         if channel is None:
-            print("Warning: New members channel not found")
+            print("Warning: New members channel not found", flush=True)
             return
 
         await channel.send(f"Welcome to the Wraithaven server, {member.mention}!")
@@ -123,26 +123,26 @@ class SaricaBot(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            print("Warning: Guild not found")
+            print("Warning: Guild not found", flush=True)
             return
 
         essence = self.db.get_essence(payload.member.id)
         points = 1
-        print(f"{payload.member.name} reacted to a message. Adding {points} exp.")
+        print(f"{payload.member.name} reacted to a message. Adding {points} exp.", flush=True)
         essence.add_points(UserClass.Reactionary, points)
         self.db.set_essence(payload.member.id, essence)
 
         try:
             role_id = self.role_mapping[payload.emoji]
         except KeyError:
-            print(f"Unknown emoji: {payload.emoji}")
+            print(f"Unknown emoji: {payload.emoji}", flush=True)
             return
 
         role = guild.get_role(role_id)
         if role is None:
             return
 
-        print(f"Adding role {role.name} to {payload.member.name}")
+        print(f"Adding role {role.name} to {payload.member.name}", flush=True)
         await payload.member.add_roles(role)
 
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
@@ -151,7 +151,7 @@ class SaricaBot(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            print("Warning: Guild not found")
+            print("Warning: Guild not found", flush=True)
             return
 
         try:
@@ -167,7 +167,7 @@ class SaricaBot(discord.Client):
         if member is None:
             return
 
-        print(f"Removing role {role.name} from {member.name}")
+        print(f"Removing role {role.name} from {member.name}", flush=True)
         await member.remove_roles(role)
 
     async def check_for_rr_update(self):
@@ -175,21 +175,21 @@ class SaricaBot(discord.Client):
         if chapter is None:
             return
 
-        print(f"New chapter posted: {chapter.name}")
+        print(f"New chapter posted: {chapter.name}", flush=True)
 
         guild = self.get_guild(self.guild.id)
         if guild is None:
-            print("Warning: Guild not found")
+            print("Warning: Guild not found", flush=True)
             return
 
         channel = guild.get_channel(self.announcements_channel_id)
         if channel is None:
-            print("Warning: Announcements channel not found")
+            print("Warning: Announcements channel not found", flush=True)
             return
 
         updates_role = guild.get_role(self.tsqs_updates_role_id)
         if updates_role is None:
-            print("Warning: TSQS Updates role not found")
+            print("Warning: TSQS Updates role not found", flush=True)
             return
 
         await channel.send(
@@ -203,7 +203,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
     async def check_for_rr_updates_slow(self):
         await self.wait_until_ready()
 
-        print("Checking for RR updates every 10 minutes")
+        print("Checking for RR updates every 10 minutes", flush=True)
         while not self.is_closed():
             await self.check_for_rr_update()
 
@@ -215,12 +215,12 @@ Chapter {chapter.index} is up: *{chapter.name}*
     async def bot_spam(self, message):
         guild = self.get_guild(self.guild.id)
         if guild is None:
-            print("Warning: Guild not found")
+            print("Warning: Guild not found", flush=True)
             return
 
         channel = guild.get_channel(self.bot_spam_channel_id)
         if channel is None:
-            print("Warning: Bot spam channel not found")
+            print("Warning: Bot spam channel not found", flush=True)
             return
 
         await channel.send(message)
@@ -240,7 +240,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             return
 
         essence = self.db.get_essence(member.id)
-        print(f"{member.name} gained {points} {user_class.get_name()} exp.")
+        print(f"{member.name} gained {points} {user_class.get_name()} exp.", flush=True)
         essence.add_points(user_class, points)
         self.db.set_essence(member.id, essence)
 
@@ -325,13 +325,13 @@ Chapter {chapter.index} is up: *{chapter.name}*
 
         essence = self.db.get_essence(message.author.id)
 
-        print(f"{message.author.name} posted a message. Adding 1 exp.")
+        print(f"{message.author.name} posted a message. Adding 1 exp.", flush=True)
         essence.add_points(UserClass.Social_Butterfly, 1)
 
         stickers = len(message.stickers)
         if stickers > 0:
             points = stickers * 5
-            print(f"{message.author.name} posted a sticker. Adding {points} exp.")
+            print(f"{message.author.name} posted a sticker. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Sticker_Collector, points)
 
         if message.channel.id == self.memes_channel_id:
@@ -339,7 +339,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
-            print(f"{message.author.name} posted a meme. Adding {points} exp.")
+            print(f"{message.author.name} posted a meme. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Jester, points)
 
         if message.channel.id == self.new_members_channel_id:
@@ -358,7 +358,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             if points > 0:
                 print(
                     f"{message.author.name} has greeted a new user(s). Adding {points} exp."
-                )
+                , flush=True)
                 essence.add_points(UserClass.Friendly_Guide, points)
 
         if message.channel.id == self.cute_pics_channel_id:
@@ -366,7 +366,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
-            print(f"{message.author.name} posted a cute pic. Adding {points} exp.")
+            print(f"{message.author.name} posted a cute pic. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Soul_Healer, points)
 
         if message.channel.id == self.nsfw_channel_id:
@@ -374,7 +374,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
-            print(f"{message.author.name} posted a NSFW pic. Adding {points} exp.")
+            print(f"{message.author.name} posted a NSFW pic. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Deviant, points)
 
         if (
@@ -382,38 +382,38 @@ Chapter {chapter.index} is up: *{chapter.name}*
             or message.channel.id == self.tsqs_spoiler_channel_id
         ):
             points = 10
-            print(f"{message.author.name} talked about TSQS. Adding {points} exp.")
+            print(f"{message.author.name} talked about TSQS. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Bug_Girl_Connoisseur, points)
 
             points = 1
-            print(f"{message.author.name} talked about a book. Adding {points} exp.")
+            print(f"{message.author.name} talked about a book. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Reader, points)
 
         if message.channel.id == self.suggestions_channel_id:
             points = 10
-            print(f"{message.author.name} made a suggestion. Adding {points} exp.")
+            print(f"{message.author.name} made a suggestion. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Visionary, points)
 
         if message.channel.id == self.theorycrafting_channel_id:
             points = 10
-            print(f"{message.author.name} theorycrafted. Adding {points} exp.")
+            print(f"{message.author.name} theorycrafted. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Conspiracy_Theorist, points)
 
         if message.channel.id == self.q_and_a_channel_id:
             points = 10
-            print(f"{message.author.name} asked a question. Adding {points} exp.")
+            print(f"{message.author.name} asked a question. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Researcher, points)
 
         if message.channel.id == self.server_discussion_channel_id:
             points = 10
             print(
                 f"{message.author.name} discussed meta server topics. Adding {points} exp."
-            )
+            , flush=True)
             essence.add_points(UserClass.Tech_Support, points)
 
         if message.channel.id == self.bot_spam_channel_id:
             points = 1
-            print(f"{message.author.name} talked in bot spam. Adding {points} exp.")
+            print(f"{message.author.name} talked in bot spam. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Tech_Support, points)
 
         if message.channel.id == self.cool_stuff_channel_id:
@@ -421,7 +421,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             if message.content is not None and len(message.content) > 0:
                 points += 1
 
-            print(f"{message.author.name} posted something cool. Adding {points} exp.")
+            print(f"{message.author.name} posted something cool. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Web_Archiver, points)
 
         if message.channel.id == self.show_off_channel_id:
@@ -433,7 +433,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
-                print(f"{message.author.name} showed off. Adding {points} exp.")
+                print(f"{message.author.name} showed off. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.intro_channel_id:
@@ -446,7 +446,7 @@ Chapter {chapter.index} is up: *{chapter.name}*
             ):
                 points = 500
 
-            print(f"{message.author.name} introduced themselves. Adding {points} exp.")
+            print(f"{message.author.name} introduced themselves. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Social_Butterfly, points)
 
         if message.channel.id == self.fan_art_channel_id:
@@ -458,10 +458,10 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
-                print(f"{message.author.name} posted fan art. Adding {points} exp.")
+                print(f"{message.author.name} posted fan art. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Artist, points)
 
-                print(f"{message.author.name} showed off. Adding {points} exp.")
+                print(f"{message.author.name} showed off. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.fan_games_channel_id:
@@ -473,10 +473,10 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
-                print(f"{message.author.name} posted a fan game. Adding {points} exp.")
+                print(f"{message.author.name} posted a fan game. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.GameDev, points)
 
-                print(f"{message.author.name} showed off. Adding {points} exp.")
+                print(f"{message.author.name} showed off. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.fan_books_channel_id:
@@ -488,15 +488,15 @@ Chapter {chapter.index} is up: *{chapter.name}*
                 if message.content is not None and len(message.content) > 0:
                     points += 1
 
-                print(f"{message.author.name} posted a fan book. Adding {points} exp.")
+                print(f"{message.author.name} posted a fan book. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Storyteller, points)
 
-                print(f"{message.author.name} showed off. Adding {points} exp.")
+                print(f"{message.author.name} showed off. Adding {points} exp.", flush=True)
                 essence.add_points(UserClass.Content_Creator, points)
 
         if message.channel.id == self.book_discussion_channel_id:
             points = 10
-            print(f"{message.author.name} discussed a book. Adding {points} exp.")
+            print(f"{message.author.name} discussed a book. Adding {points} exp.", flush=True)
             essence.add_points(UserClass.Reader, points)
 
         self.db.set_essence(message.author.id, essence)

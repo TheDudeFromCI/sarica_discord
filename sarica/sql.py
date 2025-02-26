@@ -17,7 +17,7 @@ class Database:
             self.conn = sqlite3.connect(self.db_path)
             self.cursor = self.conn.cursor()
         except sqlite3.OperationalError as e:
-            print(f"Error opening database: {e}")
+            print(f"Error opening database: {e}", flush=True)
             raise SystemExit
 
         self.cursor.execute(
@@ -61,7 +61,7 @@ class Database:
             self.set("schema_version", SCHEMA_VERSION)
             return
 
-        print(f"Unknown schema version: {schema_version}")
+        print(f"Unknown schema version: {schema_version}", flush=True)
         raise SystemExit
 
     def get(self, key):
